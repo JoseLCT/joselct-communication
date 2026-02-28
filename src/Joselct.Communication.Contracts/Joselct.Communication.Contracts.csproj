@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PackageId>Joselct.Communication.Contracts</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Joselct</Authors>
+        <Description>Core contracts for Joselct.Communication — IntegrationMessage and publisher/consumer abstractions.</Description>
+        <PackageTags>messaging;rabbitmq;integration;distributed;contracts</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/joselct/joselct-communication</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+</Project>

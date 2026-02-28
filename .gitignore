@@ -1,0 +1,13 @@
+# Build outputs
+bin/
+obj/
+
+# NuGet packages
+/packages/
+*.nupkg
+*.snupkg
+
+# Rider
+.idea/
+riderModule.iml
+/_ReSharper.Caches/

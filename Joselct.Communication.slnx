@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Joselct.Communication.Contracts/Joselct.Communication.Contracts.csproj" />
+    <Project Path="src/Joselct.Communication.RabbitMQ/Joselct.Communication.RabbitMQ.csproj" />
+  </Folder>
+</Solution>
