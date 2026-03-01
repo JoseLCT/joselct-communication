@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Joselct.Communication.Contracts.Messages;
 using Joselct.Communication.Contracts.Services;
 using Joselct.Communication.RabbitMQ.Telemetry;
@@ -31,12 +30,13 @@ internal sealed class RabbitMqExternalPublisher : IExternalPublisher, IAsyncDisp
 
     public async Task PublishAsync<T>(
         T message,
-        string? destination = null,
+        string destination,
+        string routingKey = "",
         bool declareDestination = false,
         CancellationToken ct = default
     ) where T : IntegrationMessage
     {
-        var exchangeName = destination ?? PascalToKebabCase(typeof(T).Name);
+        var exchangeName = destination;
 
         using var activity = RabbitMqTelemetry.ActivitySource.StartActivity(
             $"{exchangeName} publish",
@@ -85,11 +85,12 @@ internal sealed class RabbitMqExternalPublisher : IExternalPublisher, IAsyncDisp
 
             await channel.BasicPublishAsync(
                 exchange: exchangeName,
-                routingKey: string.Empty,
+                routingKey: routingKey,
                 mandatory: false,
                 basicProperties: properties,
                 body: body,
-                cancellationToken: ct);
+                cancellationToken: ct
+            );
 
             RabbitMqTelemetry.MessagesPublished.Add(1,
                 new KeyValuePair<string, object?>("exchange", exchangeName));
@@ -146,18 +147,5 @@ internal sealed class RabbitMqExternalPublisher : IExternalPublisher, IAsyncDisp
         }
 
         _channelLock.Dispose();
-    }
-
-    private static string PascalToKebabCase(string value)
-    {
-        if (string.IsNullOrEmpty(value)) return value;
-
-        return Regex.Replace(
-                value,
-                "(?<!^)([A-Z][a-z]|(?<=[a-z])[A-Z0-9])",
-                "-$1",
-                RegexOptions.Compiled)
-            .Trim()
-            .ToLower();
     }
 }

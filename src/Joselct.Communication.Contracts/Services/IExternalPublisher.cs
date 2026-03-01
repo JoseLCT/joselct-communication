@@ -6,7 +6,8 @@ public interface IExternalPublisher
 {
     Task PublishAsync<T>(
         T message,
-        string? destination = null,
+        string destination,
+        string routingKey = "",
         bool declareDestination = false,
         CancellationToken ct = default
     ) where T : IntegrationMessage;

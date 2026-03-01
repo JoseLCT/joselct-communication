@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>Joselct.Communication.Contracts</PackageId>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Joselct</Authors>
         <Description>Core contracts for Joselct.Communication — IntegrationMessage and publisher/consumer abstractions.</Description>
         <PackageTags>messaging;rabbitmq;integration;distributed;contracts</PackageTags>

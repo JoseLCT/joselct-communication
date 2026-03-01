@@ -27,6 +27,7 @@ public class RabbitMqConsumer<T> : BackgroundService
 
     private readonly string _queueName;
     private readonly string? _exchangeName;
+    private readonly string _routingKey;
     private readonly bool _declareQueue;
 
     private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
@@ -38,6 +39,7 @@ public class RabbitMqConsumer<T> : BackgroundService
         IOptions<RabbitMqOptions> options,
         string queueName,
         string? exchangeName = null,
+        string routingKey = "",
         bool declareQueue = false)
     {
         _scopeFactory = scopeFactory;
@@ -46,6 +48,7 @@ public class RabbitMqConsumer<T> : BackgroundService
         _options = options.Value;
         _queueName = queueName;
         _exchangeName = exchangeName;
+        _routingKey = routingKey;
         _declareQueue = declareQueue;
     }
 
@@ -117,8 +120,9 @@ public class RabbitMqConsumer<T> : BackgroundService
                 await channel.QueueBindAsync(
                     queue: _queueName,
                     exchange: _exchangeName,
-                    routingKey: string.Empty,
-                    cancellationToken: ct);
+                    routingKey: _routingKey,
+                    cancellationToken: ct
+                );
             }
         }
 

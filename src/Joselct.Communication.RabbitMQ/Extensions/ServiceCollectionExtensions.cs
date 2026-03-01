@@ -31,7 +31,9 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         string queueName,
         string? exchangeName = null,
-        bool declareQueue = false)
+        string routingKey = "",
+        bool declareQueue = false
+    )
         where TMessage : IntegrationMessage
         where THandler : class, IIntegrationMessageConsumer<TMessage>
     {
@@ -45,7 +47,10 @@ public static class ServiceCollectionExtensions
                 sp.GetRequiredService<IOptions<RabbitMqOptions>>(),
                 queueName,
                 exchangeName,
-                declareQueue));
+                routingKey,
+                declareQueue
+            )
+        );
 
         return services;
     }
