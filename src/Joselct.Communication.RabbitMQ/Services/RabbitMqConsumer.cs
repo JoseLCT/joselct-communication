@@ -13,7 +13,6 @@ using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using ExchangeType = RabbitMQ.Client.ExchangeType;
 
 namespace Joselct.Communication.RabbitMQ.Services;
 
@@ -84,11 +83,9 @@ public class RabbitMqConsumer<T> : BackgroundService
 
         if (_exchangeName is not null)
         {
-            _logger.LogDebug("Declaring exchange {Exchange}", _exchangeName);
-            await channel.ExchangeDeclareAsync(
+            _logger.LogDebug("Verifying exchange {Exchange}", _exchangeName);
+            await channel.ExchangeDeclarePassiveAsync(
                 exchange: _exchangeName,
-                type: ExchangeType.Fanout,
-                durable: true,
                 cancellationToken: ct);
         }
 
