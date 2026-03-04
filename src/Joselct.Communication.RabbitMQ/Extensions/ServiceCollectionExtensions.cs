@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
             opts.PropertyNameCaseInsensitive = true;
             opts.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             opts.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            opts.NumberHandling = JsonNumberHandling.AllowReadingFromString;
         });
 
         return services;
