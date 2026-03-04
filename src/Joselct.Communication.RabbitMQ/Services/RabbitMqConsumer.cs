@@ -23,6 +23,7 @@ public class RabbitMqConsumer<T> : BackgroundService
     private readonly RabbitMqConnectionManager _connectionManager;
     private readonly ILogger<RabbitMqConsumer<T>> _logger;
     private readonly RabbitMqOptions _options;
+    private readonly JsonSerializerOptions _jsonOptions;
 
     private readonly string _queueName;
     private readonly string? _exchangeName;
@@ -36,6 +37,7 @@ public class RabbitMqConsumer<T> : BackgroundService
         RabbitMqConnectionManager connectionManager,
         ILogger<RabbitMqConsumer<T>> logger,
         IOptions<RabbitMqOptions> options,
+        JsonSerializerOptions jsonOptions,
         string queueName,
         string? exchangeName = null,
         string routingKey = "",
@@ -45,6 +47,7 @@ public class RabbitMqConsumer<T> : BackgroundService
         _connectionManager = connectionManager;
         _logger = logger;
         _options = options.Value;
+        _jsonOptions = jsonOptions;
         _queueName = queueName;
         _exchangeName = exchangeName;
         _routingKey = routingKey;
@@ -187,7 +190,7 @@ public class RabbitMqConsumer<T> : BackgroundService
 
         try
         {
-            message = JsonSerializer.Deserialize<T>(ea.Body.Span);
+            message = JsonSerializer.Deserialize<T>(ea.Body.Span, _jsonOptions);
 
             if (message is null)
             {
@@ -217,7 +220,7 @@ public class RabbitMqConsumer<T> : BackgroundService
         catch (JsonException ex)
         {
             _logger.LogError(ex,
-                "Failed to deserialize message from queue {Queue}. Discarding.",
+                "Failed to deserialize message from queue {Queue}. Sending to DLQ.",
                 _queueName);
 
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
@@ -226,7 +229,12 @@ public class RabbitMqConsumer<T> : BackgroundService
             RabbitMqTelemetry.ConsumeFailed.Add(1,
                 new KeyValuePair<string, object?>("queue", _queueName));
 
-            await channel.BasicAckAsync(ea.DeliveryTag, false, ct);
+            await channel.BasicNackAsync(
+                ea.DeliveryTag,
+                multiple: false,
+                requeue: false,
+                cancellationToken: ct
+            );
         }
         catch (Exception ex)
         {

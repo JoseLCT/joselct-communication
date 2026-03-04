@@ -1,4 +1,6 @@
-﻿using Joselct.Communication.Contracts.Messages;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Joselct.Communication.Contracts.Messages;
 using Joselct.Communication.Contracts.Services;
 using Joselct.Communication.RabbitMQ.Config;
 using Joselct.Communication.RabbitMQ.Services;
@@ -24,6 +26,13 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IExternalPublisher, RabbitMqExternalPublisher>();
 
+        services.Configure<JsonSerializerOptions>("rabbitmq",opts =>
+        {
+            opts.PropertyNameCaseInsensitive = true;
+            opts.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            opts.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        });
+
         return services;
     }
 
@@ -45,6 +54,7 @@ public static class ServiceCollectionExtensions
                 sp.GetRequiredService<RabbitMqConnectionManager>(),
                 sp.GetRequiredService<ILogger<RabbitMqConsumer<TMessage>>>(),
                 sp.GetRequiredService<IOptions<RabbitMqOptions>>(),
+                sp.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("rabbitmq"),
                 queueName,
                 exchangeName,
                 routingKey,
