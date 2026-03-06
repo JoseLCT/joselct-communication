@@ -1,6 +1,6 @@
 ﻿namespace Joselct.Communication.Contracts.Messages;
 
-public abstract record IntegrationMessage
+public abstract class IntegrationMessage
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
