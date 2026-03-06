@@ -190,7 +190,18 @@ public class RabbitMqConsumer<T> : BackgroundService
 
         try
         {
-            message = JsonSerializer.Deserialize<T>(ea.Body.Span, _jsonOptions);
+            if (typeof(T) == typeof(RawMessage))
+            {
+                message = (T)(object)new RawMessage
+                {
+                    Body = ea.Body,
+                    RoutingKey = ea.RoutingKey
+                };
+            }
+            else
+            {
+                message = JsonSerializer.Deserialize<T>(ea.Body.Span, _jsonOptions);
+            }
 
             if (message is null)
             {

@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<RabbitMqConnectionManager>();
 
-        services.AddScoped<IExternalPublisher, RabbitMqExternalPublisher>();
+        services.AddSingleton<IExternalPublisher, RabbitMqExternalPublisher>();
 
         services.Configure<JsonSerializerOptions>("rabbitmq",opts =>
         {

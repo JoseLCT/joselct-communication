@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
 
         <PackageId>Joselct.Communication.RabbitMQ</PackageId>
-        <Version>1.0.5</Version>
+        <Version>1.0.6</Version>
         <Authors>Joselct</Authors>
         <Description>RabbitMQ implementation for Joselct.Communication with OpenTelemetry support and persistent connections.</Description>
         <PackageTags>rabbitmq;messaging;integration;distributed;opentelemetry</PackageTags>
