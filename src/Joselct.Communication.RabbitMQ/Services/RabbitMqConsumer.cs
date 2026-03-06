@@ -194,7 +194,7 @@ public class RabbitMqConsumer<T> : BackgroundService
             {
                 message = (T)(object)new RawMessage
                 {
-                    Body = ea.Body,
+                    Body = ea.Body.ToArray(),
                     RoutingKey = ea.RoutingKey
                 };
             }
