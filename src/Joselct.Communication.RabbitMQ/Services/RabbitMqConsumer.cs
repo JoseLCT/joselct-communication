@@ -82,7 +82,7 @@ public class RabbitMqConsumer<T> : BackgroundService
     private async Task ConsumeAsync(CancellationToken ct)
     {
         var connection = await _connectionManager.GetConnectionAsync(ct);
-        var channel = await connection.CreateChannelAsync(cancellationToken: ct);
+        await using var channel = await connection.CreateChannelAsync(cancellationToken: ct);
 
         if (_exchangeName is not null)
         {
